@@ -42,17 +42,18 @@ export HISTTIMEFORMAT='%F %T '
 
 # keep history up to date, across sessions, in realtime
 #  http://unix.stackexchange.com/a/48113
-export HISTCONTROL=ignoredups:erasedups         # no duplicate entries
-export HISTSIZE=100000                          # big big history (default is 500)
-export HISTFILESIZE=$HISTSIZE                   # big big history
-which shopt > /dev/null && shopt -s histappend  # append to history, don't overwrite it
+export HISTCONTROL=ignoredups:erasedups:ignorespace  # no duplicate entries
+export HISTSIZE=100000                               # big big history (default is 500)
+export HISTFILESIZE=$HISTSIZE                        # big big history
+which shopt > /dev/null && shopt -s histappend       # append to history, don't overwrite it
 
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # ^ the only downside with this is [up] on the readline will go over all history not just this bash session.
 
-
+# Case-insensitive globbing (used in pathname expansion)
+shopt -s nocaseglob;
 
 ##
 ## hooking in other apps…
@@ -66,7 +67,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # z beats cd most of the time.
 #   github.com/rupa/z
-source ~/code/z/z.sh
+# source ~/code/z/z.sh
 
 
 
@@ -103,6 +104,18 @@ fi;
 complete -W "NSGlobalDomain" defaults
 
 
+# Enable some Bash 4 features when possible:
+# * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
+# * Recursive globbing, e.g. `echo **/*.txt`
+for option in autocd globstar; do
+    shopt -s "$option" 2> /dev/null;
+done;
+
+
+# Add `killall` tab completion for common apps
+complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter Google Chrome Atom Sublime Text" killall;
+
+
 ##
 ## better `cd`'ing
 ##
@@ -113,6 +126,12 @@ shopt -s nocaseglob;
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell;
 
+# Use 64-bit
+export ARCHFLAGS="-arch x86_64"
+# Set default locale
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
-
-
+# Disable the standard virtualenv prompt
+export VIRTUAL_ENV_DISABLE_PROMPT=true

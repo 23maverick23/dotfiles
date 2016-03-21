@@ -1,11 +1,26 @@
-set default_user "paulirish"
-set default_machine "paulirish-macbookair2"
+# THIS SHOULD GO IN THE config.fish FILE
+powerline-daemon -q
+# finds the path of the installed package using pip and grep
+set -g -x powerline_path (pip show powerline-status | grep -o 'Location: .*' | sed -e s/'Location: '//)
+set fish_function_path $fish_function_path "$powerline_path/powerline/bindings/fish"
+powerline-setup
 
 
-source ~/.config/fish/path.fish
+set default_user "rymo"
+set default_machine "Bessie"
+
+
+# source ~/.config/fish/path.fish  # need to fix bug with split string
 source ~/.config/fish/aliases.fish
-source ~/.config/fish/chpwd.fish
+# source ~/.config/fish/chpwd.fish  # need to fix bug with ls
 
+# Set default locale
+set -g -x LC_CTYPE en_US.UTF-8
+set -g -x LC_ALL en_US.UTF-8
+set -g -x LANG en_US.UTF-8
+
+# load iterm2 shell integration
+# test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
 # Completions
 function make_completion --argument-names alias command
@@ -21,7 +36,17 @@ end
 
 make_completion g 'git'
 
+set -g SUBLIME 'subl'
+set -g EDITOR '$SUBLIME --wait'
+set -g MYSHELL 'fish'
+set -g VISUAL '$EDITOR'
+set -g BROWSER open
 
+# Set global variables for key paths
+set -g -x VIRTUALENV_HOME $HOME/.virtualenvs
+set -g -x PROJECT_HOME $HOME/Projects
+# Disable standard virtualenv prompt when using powerline
+set -g -x VIRTUAL_ENV_DISABLE_PROMPT "true"
 
 
 # Readline colors

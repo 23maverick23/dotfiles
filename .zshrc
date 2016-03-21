@@ -1,6 +1,9 @@
 # uncomment to profile prompt startup with zprof
 # zmodload zsh/zprof
 
+# set shell variable
+MYSHELL=zsh
+
 # history
 SAVEHIST=100000
 
@@ -111,5 +114,5 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 # Load default dotfiles
 source ~/.bash_profile
 
-
+. /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

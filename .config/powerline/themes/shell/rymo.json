@@ -1,0 +1,69 @@
+{
+    "segments": {
+        "left": [
+            {
+                "function": "powerline.segments.shell.mode"
+            },
+            {
+                "function": "powerline.segments.common.env.environment",
+                "args": {
+                    "variable": "MYSHELL",
+                    "priority": 50
+                }
+            },
+            {
+                "function": "powerline.segments.common.net.internal_ip",
+                "priority": 50,
+                "args": {
+                    "interface": "default_gateway"
+                }
+            },
+            {
+                "function": "powerline.segments.common.net.hostname",
+                "priority": 10,
+                "args": {
+                    "only_if_ssh": true
+                }
+            },
+            {
+                "function": "powerline.segments.common.env.user",
+                "priority": 30,
+                "args": {
+                    "hide_user": "rymo"
+                }
+            },
+            {
+                "function": "powerline.segments.common.env.virtualenv",
+                "priority": 50
+            },
+            {
+                "function": "powerline.segments.shell.cwd",
+                "priority": 10,
+                "args": {
+                    "dir_shorten_len": 2,
+                    "dir_limit_depth": 5,
+                    "shorten_home": true
+                }
+            }
+        ],
+        "right": [
+            {
+                "function": "powerline.segments.shell.last_pipe_status",
+                "priority": 10
+            },
+            {
+                "function": "powerline_gitstatus.gitstatus",
+                "module": "powerline_gitstatus.segments",
+                "priority": 40
+            },
+            {
+                "function": "powerline.segments.common.time.date",
+                "priority": 50,
+                "args": {
+                    "istime": true,
+                    "format": "%a %I:%M%p"
+                }
+            }
+        ]
+    }
+}

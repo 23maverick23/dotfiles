@@ -1,76 +1,206 @@
-[alias]
-	c = commit -am
-	up = pull
-	p = push
-	s = status -s
-	sclone = clone --depth=1
-	co = checkout
-	df = diff --color --color-words --abbrev
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	
-	# Show the diff between the latest commit and the current state
-	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
-
-	reup = rebase-update # depot_tools specific
-	
 [core]
-	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
-	# insanely beautiful diffs
-	pager = diff-highlight | diff-so-fancy | less -r
-	
-# so much color
+	# Use custom `.gitignore` and `.gitattributes`
+	excludesfile = ~/.gitignore_local
+	attributesfile = ~/.gitattributes_local
+
+	# Treat spaces before tabs and all kinds of trailing whitespace as an error
+	# [default] trailing-space: looks for spaces at the end of a line
+	# [default] space-before-tab: looks for spaces before tabs at the beginning of a line
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+
+	# Make `git rebase` safer on OS X
+	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+	trustctime = false
+
+	# Set editor to sublime
+	editor = "subl -n -w"
+
+[include]
+  path = ~/.gitconfig.local
+
 [color]
-	ui = always
-[color "diff"]
-	meta = yellow bold
-	commit = green bold
-	frag = magenta bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = "red bold 52"
-	newNormal = "green bold"
-	newHighlight = "green bold 22"
+	# Use colors in Git commands that are capable of colored output when
+	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
 [color "branch"]
 	current = yellow reverse
-	local = yellow
+	local = blue
 	remote = green
+
+[color "diff"]
+	meta = yellow
+	frag = magenta # line info
+	old = red bold # deletions
+	new = green # additions
+	whitespace = red reverse # whitespace
+	plain = white
+
 [color "status"]
 	added = yellow
 	changed = green
 	untracked = cyan
 
-# git mergetool
-[merge]
-	tool = opendiff
+[push]
+    default = current
 
-# rewrites of repo paths
+[pull]
+    default = current
+
+[branch]
+    autosetuprebase = always
+
+[apply]
+    whitespace = nowarn
+
+[merge]
+	# Include summaries of merged commits in newly created merge commit messages
+	log = true
+
+[mergetool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	trustExitCode = true
+
+[diff]
+	# Detect copies as well as renames
+	renames = copies
+	mnemonicprefix = true
+
+[difftool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
+	path = 
+
+[help]
+	# Automatically correct and execute mistyped commands
+	autocorrect = 1
+
 [url "git@github.com:"]
 	insteadOf = "gh:"
-	insteadOf = "git://github.com"
 	pushInsteadOf = "github:"
 	pushInsteadOf = "git://github.com/"
-    pushInsteadOf = "https://github.com/"
+
+[url "git://github.com/"]
+	insteadOf = "github:"
+
 [url "git@gist.github.com:"]
 	insteadOf = "gst:"
 	pushInsteadOf = "gist:"
 	pushInsteadOf = "git://gist.github.com/"
-	pushInsteadOf = "https://gist.github.com/"
 
-# correct typos
-[help]
-	autocorrect = 1
+[url "git://gist.github.com/"]
+	insteadOf = "gist:"
 
-# push easily. http://stackoverflow.com/a/23918418/89484
-[push]
-	default = current
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
 
-# use separate file for username / github token / etc 
-[include]
-  path = ~/.gitconfig.local
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
 
-[init]
-	templatedir = ~/.git_template
+[rebase]
+  autosquash = true
+
+[alias]
+	# basic {{{
+	s = status -sb
+	c = commit -av
+	cam = commit --amend
+	a = add -A
+	aa = !"git add -u && git add . && git status -sb"
+	cl = clone --recursive
+	co = checkout
+	cob = checkout -b
+	br = branch
+	r = reset
+	# }}}
+	
+    # tweak defaults {{{
+	diff = diff --word-diff
+	branch = branch -ra
+	grep = grep -Ii
+	ai = add --interactive
+	find = "!git ls-files | grep -i"
+	# }}}
+	
+    # logs {{{
+	l = log --pretty=oneline -n 10 --abbrev-commit
+	lc = log origin/master..HEAD
+	ls = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=relative
+    lme = !git log --author `git config user.email`
+    lstat = log --shortstat --oneline -n 5
+    llast = log origin/master..HEAD --stat --oneline
+	lgraph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    changelog = !"git log --pretty=format:'- %s%n%b' --since='(git show -s --format=%ad `git rev-list --tags --max-count=1`)'"
+	flog = log -u
+    h = !git --no-pager log origin/master..HEAD --abbrev-commit --pretty=oneline
+    # }}}
+    
+    # diff {{{
+    d = diff --word-diff
+    dlast = diff --cached HEAD^
+    dbranch = !"git --no-pager log origin/master..HEAD --abbrev-commit --pretty=oneline"
+    # }}}
+    
+    # files {{{
+    untrack = "!f() { git rm --cached \"$1\"; }; f"
+    discard = "!f() { git checkout $1; }; f"
+    discardall = checkout -- .
+    showme = !"git ls-tree -r master --name-only"
+    ready = !"git rebase -i @{u}"
+    findcommit = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+    # }}}
+    
+    # branches {{{
+    branches = branch -a
+    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+    delm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    delb = !"echo Ready to delete branch $1? ENTER && read && git branch -D $1"
+    # }}}
+    
+    # stash {{{
+    sl = stash list
+    sa = stash apply
+    ss = stash save
+    sp = stash pop
+    # }}}
+    
+    # pull {{{
+    p = !"git pull; git submodule foreach git pull origin master"
+    up = !"git fetch origin && git rebase origin/master"
+    # }}}
+    
+    # push {{{
+    pom = !"git h && echo Ready to push? ENTER && read && git push origin master"
+  	pomt = !"git h && echo Ready to push with tags? ENTER && read && git push origin master && git push origin master --tags"
+  	pweb = !"git h && echo Ready to push to web? ENTER && read && git push web master"
+  	pall = !"git push --all"
+	cleanup = !"git remote prune origin && git gc && git clean -dfx && git stash clear"
+    # }}}
+    
+    # tags {{{
+    tag = tag -a $1
+    tags = tag -l
+    lasttag = describe --tags --abbrev=0
+    # }}}
+    
+    # useful {{{
+	ssh = !"ssh -T git@github.com"
+	remotes = remote -v
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	undo = reset HEAD~1 --mixed
+	reb = "!r() { git rebase -i HEAD~$1; }; r"
+	contributors = shortlog -sne
+	ignored = ls-files -o -i --exclude-standard
+	empty = "!git commit -am\"[empty] Initial commit\" --allow-empty"
+    # }}}
+    
+    # aliases {{{
+	la = "!git config -l | grep alias | cut -c 7-"
+	aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
+    # }}}
