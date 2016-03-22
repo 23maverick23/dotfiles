@@ -12,6 +12,8 @@ set default_machine "Bessie"
 
 # source ~/.config/fish/path.fish  # need to fix bug with split string
 source ~/.config/fish/aliases.fish
+source ~/.config/fish/functions/virtualenvs.fish
+source ~/.config/fish/functions/la.fish
 # source ~/.config/fish/chpwd.fish  # need to fix bug with ls
 
 # Set default locale
@@ -38,7 +40,7 @@ make_completion g 'git'
 
 set -g SUBLIME 'subl'
 set -g EDITOR '$SUBLIME --wait'
-set -g MYSHELL 'fish'
+set -g -x MYSHELL 'fish'
 set -g VISUAL '$EDITOR'
 set -g BROWSER open
 

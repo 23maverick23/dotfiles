@@ -15,8 +15,8 @@ esac
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-export powerline_path=$(pip show powerline-status | grep -o 'Location: .*' | sed -e s/'Location: '//)
-. $powerline_path/powerline/bindings/bash/powerline.sh
+export powerline_path="$(pip show powerline-status | grep -o 'Location: .*' | sed -e s/'Location: '//)"
+. "$powerline_path/powerline/bindings/bash/powerline.sh"
 
 # generic colouriser
 GRC=`which grc`

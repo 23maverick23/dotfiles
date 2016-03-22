@@ -7,15 +7,7 @@
             {
                 "function": "powerline.segments.common.env.environment",
                 "args": {
-                    "variable": "MYSHELL",
-                    "priority": 50
-                }
-            },
-            {
-                "function": "powerline.segments.common.net.internal_ip",
-                "priority": 50,
-                "args": {
-                    "interface": "default_gateway"
+                    "variable": "MYSHELL"
                 }
             },
             {
