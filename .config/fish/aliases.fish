@@ -123,4 +123,4 @@ alias week 'date +%V'
 alias chromekill "ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
 # Reload the shell (i.e. invoke as a login shell)
-alias reload "exec fish"
+alias reload "exec $MYSHELL"

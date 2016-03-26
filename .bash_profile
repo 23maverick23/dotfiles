@@ -15,8 +15,8 @@ esac
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-export powerline_path="$(pip show powerline-status | grep -o 'Location: .*' | sed -e s/'Location: '//)"
-. "$powerline_path/powerline/bindings/bash/powerline.sh"
+export powerline_path=$(pip show powerline-status | grep -o 'Location: .*' | sed -e s/'Location: '//)
+. $powerline_path/powerline/bindings/bash/powerline.sh
 
 # generic colouriser
 GRC=`which grc`
@@ -84,12 +84,17 @@ if [[ -n "$ZSH_VERSION" ]]; then  # quit now if in zsh
     return 1 2> /dev/null || exit 1;
 fi;
 
+## NOTE: This is buggy and produces errors
 # bash completion.
-if  which brew > /dev/null && [ -f "$(brew --prefix)/share/bash-completion/bash_completion" ]; then
-    source "$(brew --prefix)/share/bash-completion/bash_completion";
-elif [ -f /etc/bash_completion ]; then
-    source /etc/bash_completion;
-fi;
+# if  which brew > /dev/null && [ -f $(brew --prefix)/share/bash-completion/bash_completion ]; then
+#     source $(brew --prefix)/share/bash-completion/bash_completion;
+# elif [ -f /etc/bash_completion ]; then
+#     source /etc/bash_completion;
+# fi;
+
+if [ -f $(brew --prefix)/share/bash-completion/bash_completion ]; then
+. $(brew --prefix)/share/bash-completion/bash_completion
+fi
 
 # homebrew completion
 if  which brew > /dev/null; then
